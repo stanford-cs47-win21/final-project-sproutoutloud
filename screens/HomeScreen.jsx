@@ -2,23 +2,20 @@ import { useScrollToTop } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Feed from '../components/Feed';
-import firestore from "../firebase/Firebase";
 
-export default function HomeFeed() {
-  var posts = firestore.ref('users');
-  posts.on('value',(snapshot) => {
-    const data = snapshot.val();
-    console.log(data)
-  })
+
+export default function HomeScreen({navigation}) {
+
+  let onPostRequested = (post) => {
+    console.log(post)
+  }
+
   return (
     <View style={styles.container}>
-     <Feed/>
+     <Feed onPostRequested={onPostRequested}/>
     </View>
   );
 }
-
-
-
 
 const styles = StyleSheet.create({
   container: {
