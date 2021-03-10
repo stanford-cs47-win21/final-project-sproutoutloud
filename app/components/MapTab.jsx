@@ -33,10 +33,12 @@ export default function MapTab({ navigation, events }) {
           <Marker
             key={idx}
             coordinate={{ latitude: event.latitude, longitude: event.longitude }}
+            centerOffset={{x: 0, y: -28}}
             image={event.pinIcon}
             onPress={() => navigateToActivity(event)}
           />
         )}
+        <Marker coordinate={{ latitude: 37.4255, longitude: -122.164 }} image={Images.location_marker} />
       </MapView>
       <MapDrawer navigation={navigation} events={events} />
     </View>
