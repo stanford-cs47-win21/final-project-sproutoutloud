@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet';
 import MapEventCard from './MapEventCard';
 import Metrics from '../Metrics';
-import Images from '../Images';
 
 export default function MapDrawer({ navigation, events }) {
 
@@ -94,6 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   content: {
+    alignItems: 'flex-start',
     backgroundColor: Metrics.whiteColor,
   }
 });

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     fontFamily: Metrics.fontFamily,
     fontWeight: 'bold',
     color: Metrics.whiteColor,
-    letterSpacing: 0.05,
+    letterSpacing: 0.3,
     fontSize: 18,
   }
 });
