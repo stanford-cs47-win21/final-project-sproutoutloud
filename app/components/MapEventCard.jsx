@@ -1,17 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import Metrics from '../Metrics';
 
-export default function MapEventCard({ title, subtitle, details, icon }) {
+export default function MapEventCard({ title, subtitle, details, icon, onPress }) {
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity 
+      style={styles.cardContainer} 
+      onPress={onPress}
+    >
       <Image style={styles.icon} source={icon} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
         <Text style={styles.details}>{details}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

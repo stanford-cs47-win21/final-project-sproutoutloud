@@ -5,54 +5,58 @@ import MapEventCard from './MapEventCard';
 import Metrics from '../Metrics';
 import Images from '../Images';
 
-const SNAP_POINT_LOW = 52;
-const SNAP_POINT_HIGH = 240;
+export default function MapDrawer({ navigation, events }) {
 
-function drawerHeader() { 
-  return (
-    <View style={styles.header}>
-      <View style={styles.handleContainer}>
-        <View style={styles.handle} /> 
+  const SNAP_POINT_LOW = 52;
+  const SNAP_POINT_HIGH = 240; 
+
+  const navigateToActivity = (event) => {
+    navigation.navigate("SustainableActivity", 
+    {
+      title: event.title, 
+      eventPic: event.eventPic, 
+      details: event.details, 
+      description: event.description
+    });
+  };
+
+  const renderContent = () => {
+    return (
+      <View style={styles.content}> 
+        {events.map((event, idx) => 
+          <MapEventCard
+            key={idx}
+            title={event.title}
+            subtitle={event.subtitle}
+            details={event.briefDetails}
+            icon={event.cardIcon}
+            onPress={() => navigateToActivity(event)}
+          />
+        )}
       </View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Activities Near Me</Text>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <View style={styles.header}>
+        <View style={styles.handleContainer}>
+          <View style={styles.handle} /> 
+        </View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Activities Near Me</Text>
+        </View>
       </View>
-    </View>
-  );
-}
+    );
+  };
 
-function drawerContent() { 
-  return (
-    <View style={styles.content}> 
-      <MapEventCard
-        title="Clean Up the Oval"
-        subtitle="Trash pick-up at the Stanford Oval"
-        details="0.5 miles away - Sunday, March 14, 2021"
-        icon={Images.oval_icon}
-      />
-      <MapEventCard
-        title="Stanford Stadium Recycling"
-        subtitle="Recycling at Stanford Stadium Parking Lot"
-        details="0.7 miles away - Tomorrow, March 13, 2021"
-        icon={Images.stadium_icon}
-      />
-      <MapEventCard
-        title="Lake Lagunita Tree Planting"
-        subtitle="Planting at the west end of Lake Lagunita"
-        details="0.9 miles away - Friday, March 19, 2021"
-        icon={Images.lakelag_icon}
-      />
-    </View>
-  );
-}
-
-export default function MapDrawer() {
   return (
     <BottomSheet
       snapPoints={[SNAP_POINT_HIGH, SNAP_POINT_LOW]}
       initialSnap={1}
-      renderContent={drawerContent}
-      renderHeader={drawerHeader}
+      renderContent={renderContent}
+      renderHeader={renderHeader}
+      enabledContentTapInteraction={false}
       enabledInnerScrolling={false}
     />
   );
@@ -61,7 +65,7 @@ export default function MapDrawer() {
 const styles = StyleSheet.create({
   header: {
     justifyContent: 'center',
-    backgroundColor: Metrics.lightColor,
+    backgroundColor: Metrics.whiteColor,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomColor: Metrics.lightGrayColor,
@@ -90,6 +94,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   content: {
-    backgroundColor: Metrics.lightColor,
+    backgroundColor: Metrics.whiteColor,
   }
 });
