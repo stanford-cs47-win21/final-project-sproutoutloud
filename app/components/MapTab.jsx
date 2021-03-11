@@ -11,7 +11,8 @@ export default function MapTab({ navigation, events }) {
       title: event.title, 
       eventPic: event.eventPic, 
       details: event.details, 
-      description: event.description
+      description: event.description,
+      calendarUrl: event.calendarUrl,
     });
   };
 

@@ -1,16 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Share } from 'react-native';
 import CustomButton from "./CustomButton";
+import * as WebBrowser from 'expo-web-browser';
 import Metrics from '../Metrics';
 
 
 export default function SustainableActivity({ route }) {
 
-  const { title, eventPic, details, description } = route.params;
+  const SITE_URL = "http://web.stanford.edu/class/cs147/projects/Sustainability/SproutOutLoud/";
+
+  const { title, eventPic, details, description, calendarUrl } = route.params;
+
+  const visitWebsite = async () => {
+    await WebBrowser.openBrowserAsync(SITE_URL);
+  };
+
+  const addToCalendar = async () => {
+    await WebBrowser.openBrowserAsync(calendarUrl);
+  }
 
   const shareActivity = async () => {
     await Share.share({
-      message: "Sprout Out Loud: Here's a cool sustainable activity for you to do!\nhttp://web.stanford.edu/class/cs147/projects/Sustainability/SproutOutLoud/",
+      message: `Sprout Out Loud: Here's a cool sustainable activity for you to do!\n${SITE_URL}`,
     });
   };
 
@@ -20,8 +31,8 @@ export default function SustainableActivity({ route }) {
       <Image style={styles.eventPic} source={eventPic} />
       <Text style={styles.details}>{details}</Text>
       <Text style={styles.description}>{description}</Text>
-      <CustomButton buttonText={"Visit Website"} onPress={null} />
-      <CustomButton buttonText={"Add to Calendar"} onPress={null} />
+      <CustomButton buttonText={"Visit Website"} onPress={visitWebsite} />
+      <CustomButton buttonText={"Add to Calendar"} onPress={addToCalendar} />
       <CustomButton buttonText={"Share Activity"} onPress={shareActivity} />
     </View>
   );
