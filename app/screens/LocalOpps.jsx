@@ -21,6 +21,7 @@ const EVENT_LIST = [
     description: "Looking for a fun way to contribute to a campaign this weekend? Join us for a trash pick-up session at the Stanford Oval!",
     details: "Sunday, March 14, 2021 at 3:00 PM",
     eventPic: Images.oval_pic,
+    calendarUrl: "https://ical.yc.sg/3cp3R57",
   },
   {
     title: "Stanford Stadium Recycling",
@@ -33,6 +34,7 @@ const EVENT_LIST = [
     description: "Need an exciting activity to contribute to a campaign? Come on over to Stanford Stadium and help us recycle a ton of leftover beer cans!",
     details: "Tomorrow, March 13, 2021 at 1:00 PM",
     eventPic: Images.stadium_pic,
+    calendarUrl: "https://ical.yc.sg/3vlKlz9",
   },
   {
     title: "Lake Lagunita Tree Planting",
@@ -45,6 +47,7 @@ const EVENT_LIST = [
     description: "Looking for a gardening activity to contribute? Exercise your green thumb and come join us in planting trees over on the west end of Lake Lag!",
     details: "Friday, March 19, 2021 at 2:00 PM",
     eventPic: Images.lakelag_pic,
+    calendarUrl: "https://ical.yc.sg/3vdd1Kt",
   },
 ];
 
