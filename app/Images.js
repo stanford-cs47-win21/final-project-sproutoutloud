@@ -1,5 +1,7 @@
 const images = {
   // icons for tab navigation bar
+  campaign_tab_active: require("./images/icons/campaign_tab_active.png"),
+  campaign_tab_inactive: require("./images/icons/campaign_tab_inactive.png"),
   home_tab_active: require("./images/icons/home_tab_active.png"),
   home_tab_inactive: require("./images/icons/home_tab_inactive.png"),
   map_tab_active: require("./images/icons/map_tab_active.png"),
