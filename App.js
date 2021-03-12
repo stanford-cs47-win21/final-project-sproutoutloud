@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import navigation screens
-import HomeFeed from "./app/screens/HomeFeed";
+import HomeScreen from "./app/screens/HomeScreen";
 import LocalOpps from "./app/screens/LocalOpps";
 // import auxiliary classes
 import Metrics from './app/Metrics';
@@ -33,7 +33,7 @@ export default function App() {
           tabStyle: {paddingTop: 6}
         }}        
       >
-        <Tab.Screen name="Home" component={HomeFeed} />
+        <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Map" component={LocalOpps} />
       </Tab.Navigator>
       <StatusBar />
