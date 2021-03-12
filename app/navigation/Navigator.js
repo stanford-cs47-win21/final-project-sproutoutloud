@@ -11,7 +11,7 @@ const FeedStack = createStackNavigator();
 function feedStackNav() {
     return(
   <FeedStack.Navigator initialRouteName="HomeSCreen" headerMode="float">
-    <FeedStack.Screen name="HomeScreen" component={HomeScreen} options={{ headerTitle: props => <Image source={require("../assets/logo.png")}/>}}/>
+    <FeedStack.Screen name="HomeScreen" component={HomeScreen} options={{ headerTitle: props => <Image source={require("../images/logo.png")}/>}}/>
     {/* <FeedStack.Screen name="PostScreen" component={}/> */}
   </FeedStack.Navigator>
   )
