@@ -16,7 +16,7 @@ export default function FeedPosts({ content, onPostRequested }) {
   const timeAgo = new TimeAgo("en-US");
 
   const [user, setUser] = useState({});
-  const [value, onChangeText] = useState(' Add a comment...');
+  const [value, onChangeText] = useState(" Add a comment...");
 
   useEffect(() => {
     const getUserData = async (user) => {
@@ -136,7 +136,7 @@ export default function FeedPosts({ content, onPostRequested }) {
 
         {/* Comment field starts here */}
 
-        <View style={{ flexDirection: "column", justifyContent:"center" }}>
+        <View style={{ flexDirection: "column", justifyContent: "center" }}>
           <View>
             {content.comment_count > 1 ? (
               <Text>View all {content.comment_count} comments</Text>
@@ -153,12 +153,18 @@ export default function FeedPosts({ content, onPostRequested }) {
                   height: 34.24,
                   width: 33.86,
                   borderRadius: 50,
-                  alignSelf:"flex-start"
+                  alignSelf: "flex-start",
                 }}
               />
             </View>
-            <View style={{ flex: 8.5 , backgroundColor:"#F4F4F5" , borderRadius:16, alignSelf:"stretch"}}>
-              
+            <View
+              style={{
+                flex: 8.5,
+                backgroundColor: "#F4F4F5",
+                borderRadius: 16,
+                alignSelf: "stretch",
+              }}
+            >
               <TextInput
                 style={{
                   height: 33.86,
@@ -166,14 +172,28 @@ export default function FeedPosts({ content, onPostRequested }) {
                   borderColor: "#c4c4c4",
                   borderWidth: 0.25,
                   borderRadius: 16,
-                  placeholderTextColor:"#c4c4c4"
                 }}
                 // onChangeText={text => onChangeText(text)}
                 value={value}
               />
             </View>
-            <View style={{ flex: 1 , alignSelf:"flex-end", alignItems :"center", justifyContent:"center" , height:33.86}}>
-              <Icon.Send stroke={"#8E8E92"} height={33.86} style={{transform: [{ rotate: '45deg'}], alignSelf:"center"}}/>
+            <View
+              style={{
+                flex: 1,
+                alignSelf: "flex-end",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 33.86,
+              }}
+            >
+              <Icon.Send
+                stroke={"#8E8E92"}
+                height={33.86}
+                style={{
+                  transform: [{ rotate: "45deg" }],
+                  alignSelf: "center",
+                }}
+              />
             </View>
           </View>
         </View>
