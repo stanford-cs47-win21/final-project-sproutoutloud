@@ -57,7 +57,7 @@ export default function LocalOpps() {
   
   const renderMapHeader = () => {
     return (
-      <Text style={styles.headerTitle}>Nearby Sustainable Activities</Text>
+      <Text style={styles.headerTitle}>Nearby Activities</Text>
     );
   };
 

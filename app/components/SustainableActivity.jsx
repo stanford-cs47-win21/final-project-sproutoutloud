@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
     fontFamily: Metrics.fontFamily,
     fontSize: 16,
     marginHorizontal: 12,
-    paddingBottom: 16,
+    paddingBottom: 12,
   }
 });
