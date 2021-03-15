@@ -26,7 +26,6 @@ export default function CampaignView({ route, navigation }) {
   const { campaign } = route.params;
   const [campaignHeader, setCampaignHeader] = useState();
   const [campaignOwner, setCampaignOwner] = useState({});
-  const [allMembers, setallMembers] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
   const userCount = campaign.users.length;
   var fireStore = firebase.storage();

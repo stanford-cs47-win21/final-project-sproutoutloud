@@ -11,12 +11,12 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import * as Icon from "react-native-feather";
 
-export default function FeedPosts({ content, onPostRequested }) {
+export default function FeedPosts({ content, loggedInUser }) {
   TimeAgo.addLocale(en);
   const timeAgo = new TimeAgo("en-US");
 
   const [user, setUser] = useState({});
-  const [value, onChangeText] = useState(" Add a comment...");
+  const [value, onChangeText] = useState();
 
   useEffect(() => {
     const getUserData = async (user) => {
@@ -148,7 +148,7 @@ export default function FeedPosts({ content, onPostRequested }) {
           <View style={styles.commentField}>
             <View style={{ flex: 1 }}>
               <Image
-                source={{ uri: user.profile_pic }}
+                source={{ uri: loggedInUser.profile_pic }}
                 style={{
                   height: 34.24,
                   width: 33.86,
@@ -174,6 +174,7 @@ export default function FeedPosts({ content, onPostRequested }) {
                   borderRadius: 16,
                 }}
                 // onChangeText={text => onChangeText(text)}
+                  placeholder={"Add a comment..."}
                 value={value}
               />
             </View>

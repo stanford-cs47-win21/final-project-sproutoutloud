@@ -24,8 +24,8 @@ export default function Campaigns({
   const [allCampaigns, setAllCampaigns] = useState([]);
 
   async function getCampaigns() {
-    const allPosts = await firestore.collection("campaigns").get();
-    return allPosts.docs.map((doc) => doc.data());
+    const allCampaigns = await firestore.collection("campaigns").get();
+    return allCampaigns.docs.map((doc) => doc.data());
   }
 
   let _keyExtractor = (item, index) => item.post_id;

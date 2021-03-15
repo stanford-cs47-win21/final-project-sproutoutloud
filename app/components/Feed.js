@@ -17,10 +17,23 @@ import FeedPosts from "./FeedPosts";
 export default function HomeFeed({ contents, onPostRequested }) {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const [loggedInUser,setLoggedInUser] = useState({})
 
   async function getPosts() {
     const allPosts = await firestore.collection("posts").get();
     return allPosts.docs.map((doc) => doc.data());
+  }
+
+  async function  getUser() {
+    await firestore.collection("users").doc("user1").get().then((doc) => {
+      if (doc.exists) {
+        setLoggedInUser(doc.data())
+      } else {
+        console.log("No such document!");
+      }
+    }).catch((error) => {
+      console.log("Error getting document:", error);
+    });
   }
 
   useEffect(() => {
@@ -28,6 +41,7 @@ export default function HomeFeed({ contents, onPostRequested }) {
       setAllPosts(contents);
     } else {
       getAllPosts();
+      getUser();
     }
   }, [contents]);
 
@@ -40,7 +54,6 @@ export default function HomeFeed({ contents, onPostRequested }) {
       setLoading(false);
     });
   };
-
   let onPostPressed = (post) => {
     onPostRequested(post);
   };
@@ -48,7 +61,7 @@ export default function HomeFeed({ contents, onPostRequested }) {
   let _keyExtractor = (item, index) => item.post_id;
 
   let renderItem = ({ item }) => {
-    return <FeedPosts content={item} />;
+    return <FeedPosts content={item} loggedInUser = {loggedInUser}/>;
   };
 
   function displayedContents() {
