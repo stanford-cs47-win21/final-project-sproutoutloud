@@ -14,14 +14,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import FeedPosts from "./FeedPosts";
 
-async function getPosts() {
-  const allPosts = await firestore.collection("posts").get();
-  return allPosts.docs.map((doc) => doc.data());
-}
-
 export default function HomeFeed({ contents, onPostRequested }) {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+
+  async function getPosts() {
+    const allPosts = await firestore.collection("posts").get();
+    return allPosts.docs.map((doc) => doc.data());
+  }
 
   useEffect(() => {
     if (contents) {

@@ -249,7 +249,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F4F4F5",
     justifyContent: "center",
   },
-
   commentField: {
     width: "100%",
     flexDirection: "row",
