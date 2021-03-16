@@ -12,6 +12,7 @@ const metrics = {
   progressUnfilledColor: "#CFEFE4",
   whiteColor: "#FFFFFF",
   blackColor: "#000000",
+  charcoalColor: "#455A64",
   lightGrayColor: "#C4C4C4",
   darkGrayColor: "#8E8E92",
   greenColor: "#25D366",

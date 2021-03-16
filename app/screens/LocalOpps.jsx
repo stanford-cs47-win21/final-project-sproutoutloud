@@ -62,7 +62,7 @@ export default function LocalOpps() {
 
   const renderActivityHeader = () => {
     return (
-      <Text style={styles.headerTitle}>Sustainable Activity</Text>
+      <Text style={styles.headerTitle}>Activity Page</Text>
     );
   };
 
