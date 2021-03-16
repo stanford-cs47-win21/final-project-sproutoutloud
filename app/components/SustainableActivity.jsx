@@ -10,7 +10,7 @@ export default function SustainableActivity({ route }) {
   const { title, eventPic, details, description, calendarUrl } = route.params;
 
   const visitWebsite = async () => {
-    await WebBrowser.openBrowserAsync(SITE_URL);
+    await WebBrowser.openBrowserAsync(Metrics.SITE_URL);
   };
 
   const addToCalendar = async () => {

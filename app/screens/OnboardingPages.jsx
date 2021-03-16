@@ -7,17 +7,22 @@ import {
   Text, 
   TouchableOpacity,
 } from "react-native";
+import * as Progress from "react-native-progress";
 // import auxiliary classes
 import Metrics from "../Metrics";
 import Images from "../Images";
 
-const LogoBanner = () => {
-  return (<Image source={Images.logo} style={styles.logoBanner} />);
+const LogoBanner = ({ style }) => {
+  return (
+    <View style={style}>
+      <Image source={Images.logo} style={styles.logoBanner} />
+    </View>
+  );
 }
 
 const Page1 = () => {
   return(
-    <SafeAreaView style={styles.logoContainer}>
+    <SafeAreaView style={styles.splashContainer}>
       <Image source={Images.logo} style={styles.bigLogo} />
       <View style={styles.valuePropContainer}> 
         <Text style={styles.valueProp}>
@@ -31,8 +36,20 @@ const Page1 = () => {
 const Page2 = () => {
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <LogoBanner />
+      <LogoBanner style={{ paddingBottom: Metrics.screenHeight * 0.05 }} />
       <Image source={Images.page2} style={styles.illustration} />
+      <View style={styles.progressView}>
+        <Text style={styles.campaignTitle}>Save the Trees! Campaign</Text>
+        <Progress.Bar
+          progress={0.4}
+          color={Metrics.greenColor}
+          unfilledColor={Metrics.progressUnfilledColor}
+          borderWidth={0}
+          width={Metrics.screenWidth * 0.7}
+          height={14}
+          borderRadius={14}
+        />
+      </View>
       <Text style={styles.text}>
         {"Join "}
         <Text style={{ ...styles.text, color: Metrics.greenColor }}>
@@ -50,8 +67,8 @@ const Page2 = () => {
 const Page3 = () => {
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <LogoBanner />
-      <Image source={Images.page3} style={styles.illustration} />
+      <LogoBanner style={{ paddingBottom: Metrics.screenHeight * 0.072 }} />
+      <Image source={Images.page3} style={{...styles.illustration, marginBottom: 32}} />
       <Text style={styles.text}>
         <Text style={{ ...styles.text, color: Metrics.greenColor }}>
           {"Find "}
@@ -69,7 +86,7 @@ const Page3 = () => {
 const Page4 = () => {
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <LogoBanner />
+      <LogoBanner style={{ paddingBottom: Metrics.screenHeight * 0.09 }} />
       <Image source={Images.page4} style={styles.illustration} />
       <Text style={styles.text}>
         {"Take "}
@@ -93,10 +110,10 @@ const Page4 = () => {
 const Page5 = ({ navigateToMainApp }) => {
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <LogoBanner />
+      <LogoBanner style={{ paddingBottom: Metrics.screenHeight * 0.09 }} />
       <Image source={Images.page5} style={styles.illustration} />
       <Text style={styles.text}>
-        {"Get rewarded with a "}
+        {"Celebrate by sharing a "}
         <Text style={{ ...styles.text, color: Metrics.greenColor }}>
           {"video montage "}
         </Text>
@@ -123,7 +140,7 @@ const Page5 = ({ navigateToMainApp }) => {
 export { Page1, Page2, Page3, Page4, Page5 };
 
 const styles = StyleSheet.create({
-  logoContainer: {
+  splashContainer: {
     backgroundColor: Metrics.whiteColor,
     justifyContent: 'center',
     alignItems: 'center',
@@ -159,9 +176,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   illustration: {
-    width: '100%',
+    width: Metrics.screenWidth,
+    height: 385,
     resizeMode: 'contain',
-    // backgroundColor: 'pink',
+  },
+  progressView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -20,
+    marginBottom: 40,
+  },
+  campaignTitle: {
+    fontFamily: Metrics.fontFamily,
+    fontWeight: 'bold',
+    fontSize: 15,
   },
   text: {
     textAlign: 'center',
@@ -173,7 +201,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   tappable: {
-    marginTop: 16,
+    marginTop: 72,
   },
   tapText: {
     textAlign: 'center',
