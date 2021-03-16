@@ -6,6 +6,8 @@ const images = {
   home_tab_inactive: require("./images/icons/home_tab_inactive.png"),
   map_tab_active: require("./images/icons/map_tab_active.png"),
   map_tab_inactive: require("./images/icons/map_tab_inactive.png"),
+  // logo for top banner
+  logo: require("./images/logo.png"),
   // images for map event cards
   oval_icon: require("./images/oval_icon.png"),
   stadium_icon: require("./images/stadium_icon.png"),

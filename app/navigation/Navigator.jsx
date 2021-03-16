@@ -27,7 +27,9 @@ export default function Navigator() {
                 ? Images.home_tab_active
                 : Images.home_tab_inactive;
             } else if (route.name === "Map") {
-              icon = focused ? Images.map_tab_active : Images.map_tab_inactive;
+              icon = focused 
+                ? Images.map_tab_active 
+                : Images.map_tab_inactive;
             } else if (route.name === "Campaigns") {
               icon = focused
                 ? Images.campaign_tab_active

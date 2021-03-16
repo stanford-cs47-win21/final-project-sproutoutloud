@@ -3,6 +3,11 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import Campaigns from "../components/Campaigns";
 import { createStackNavigator } from "@react-navigation/stack";
 import CampaignView from "../components/CampaignView";
+// import auxiliary classes
+import Metrics from '../Metrics';
+import Images from '../Images';
+
+
 const Stack = createStackNavigator();
 
 export default function CampaignsList({ navigation }) {
@@ -11,14 +16,19 @@ export default function CampaignsList({ navigation }) {
     navigation.navigate("CampaignView", { campaign: campaign });
   };
 
+  const renderLogo = () => {
+    return (
+      <Image style={styles.logoBanner} source={Images.logo} />
+    );
+  };
+
   return (
     <Stack.Navigator initialRouteName="CampaignsScreen" headerMode="float">
       <Stack.Screen
         name="CampaignsScreen"
         options={{
-          headerTitle: (props) => (
-            <Image source={require("../images/logo.png")} />
-          ),
+          headerTitle: renderLogo,
+          headerTintColor: Metrics.blackColor,
         }}
       >
         {(props) => (
@@ -38,5 +48,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor: "#fff",
+  },
+  logoBanner: {
+    width: Metrics.screenWidth * 0.7,
+    resizeMode: 'contain',
   },
 });
