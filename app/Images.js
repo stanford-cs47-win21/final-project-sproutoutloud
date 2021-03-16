@@ -8,6 +8,11 @@ const images = {
   map_tab_inactive: require("./images/icons/map_tab_inactive.png"),
   // logo for top banner
   logo: require("./images/logo.png"),
+  // image for onboarding pages
+  page2: require("./images/onboarding/page2.png"),
+  page3: require("./images/onboarding/page3.png"),
+  page4: require("./images/onboarding/page4.png"),
+  page5: require("./images/onboarding/page5.png"),
   // images for map event cards
   oval_icon: require("./images/oval_icon.png"),
   stadium_icon: require("./images/stadium_icon.png"),
