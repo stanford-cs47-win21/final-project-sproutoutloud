@@ -18,7 +18,7 @@ import en from "javascript-time-ago/locale/en";
 import * as Icon from "react-native-feather";
 import metrics from "../Metrics";
 import ReadMore from "react-native-read-more-text";
-import FeedPosts from "./FeedPosts";
+import FeedPosts from "./FeedPost";
 
 const Separator = () => <View style={styles.separator} />;
 

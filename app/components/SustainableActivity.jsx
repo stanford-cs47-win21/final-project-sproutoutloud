@@ -7,8 +7,6 @@ import Metrics from '../Metrics';
 
 export default function SustainableActivity({ route }) {
 
-  const SITE_URL = "http://web.stanford.edu/class/cs147/projects/Sustainability/SproutOutLoud/";
-
   const { title, eventPic, details, description, calendarUrl } = route.params;
 
   const visitWebsite = async () => {
@@ -21,7 +19,7 @@ export default function SustainableActivity({ route }) {
 
   const shareActivity = async () => {
     await Share.share({
-      message: `Sprout Out Loud: Here's a cool sustainable activity for you to do!\n${SITE_URL}`,
+      message: `Sprout Out Loud: Here's a cool sustainable activity for you to do!\n${Metrics.SITE_URL}`,
     });
   };
 

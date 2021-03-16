@@ -1,30 +1,39 @@
-import { useScrollToTop } from "@react-navigation/native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { StyleSheet, Text, View, Image, TabBarIOS } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+// import navigation screens
 import Feed from "../components/Feed";
+// import auxiliary classes
+import Metrics from '../Metrics';
+import Images from '../Images';
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
-  let onPostRequested = (post) => {
-    console.log(post);
+
+  const renderLogo = () => {
+    return (
+      <Image style={styles.logoBanner} source={Images.logo} />
+    );
   };
 
   return (
-    <Stack.Navigator initialRouteName="HomeScreen" headerMode="float">
+    <Stack.Navigator initialRouteName="HomeFeed">
       <Stack.Screen
-        name="HomeScreen"
+        name="HomeFeed"
+        component={Feed}
         options={{
-          headerTitle: (props) => (
-            <Image source={require("../images/logo.png")} />
-          ),
+          headerTitle: renderLogo,
+          headerTintColor: Metrics.blackColor,
         }}
-      >
-        {(props) => <Feed {...props} onPostRequested={onPostRequested} />}
-      </Stack.Screen>
-      {/* <Stack.Screen name="PostScreen" component={}/> */}
+      />
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  logoBanner: {
+    width: Metrics.screenWidth * 0.7,
+    resizeMode: 'contain',
+  },
+});

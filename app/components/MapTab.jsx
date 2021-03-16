@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapDrawer from "./MapDrawer";
+import Metrics from '../Metrics';
 import Images from '../Images';
 
 export default function MapTab({ navigation, events }) {
@@ -29,6 +30,7 @@ export default function MapTab({ navigation, events }) {
         mapType='standard'
         rotateEnabled={false}
         loadingEnabled={true}
+        loadingIndicatorColor={Metrics.greenColor}
       >
         {events.map((event, idx) =>
           <Marker

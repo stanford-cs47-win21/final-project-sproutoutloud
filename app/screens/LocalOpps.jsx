@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 // import navigation screens
 import MapTab from "../components/MapTab";
@@ -68,28 +67,26 @@ export default function LocalOpps() {
   };
 
   return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen name="MapTab" options={{ headerTitle: renderMapHeader }}>
-          {(props) => <MapTab {...props} events={EVENT_LIST}/>}
-        </Stack.Screen>
-        <Stack.Screen 
-          name="SustainableActivity" 
-          component={SustainableActivity}
-          intialParams={{
-            title: "", 
-            eventPic: null, 
-            details: "", 
-            description: ""
-          }}
-          options={{ 
-            headerTitle: renderActivityHeader, 
-            headerBackTitleVisible: false, 
-            headerTintColor: Metrics.blackColor,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="MapTab">
+      <Stack.Screen name="MapTab" options={{ headerTitle: renderMapHeader }}>
+        {(props) => <MapTab {...props} events={EVENT_LIST}/>}
+      </Stack.Screen>
+      <Stack.Screen 
+        name="SustainableActivity" 
+        component={SustainableActivity}
+        intialParams={{
+          title: "", 
+          eventPic: null, 
+          details: "", 
+          description: ""
+        }}
+        options={{ 
+          headerTitle: renderActivityHeader, 
+          headerBackTitleVisible: false, 
+          headerTintColor: Metrics.blackColor,
+        }}
+      />
+    </Stack.Navigator>
   );
 }
 
