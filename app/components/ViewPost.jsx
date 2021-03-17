@@ -12,8 +12,9 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  ImageBackground,
 } from "react-native";
-import { ThumbsUp, MessageCircle, Upload, Send } from "react-native-feather";
+import { ThumbsUp, MessageCircle, Upload, Send, PlayCircle } from "react-native-feather";
 import * as firebase from "firebase";
 import PostHeader from "./PostHeader";
 import PostProgress from "./PostProgress";
@@ -169,7 +170,15 @@ export default function ViewPost({ route }) {
                 posterName={`${poster.first_name} ${poster.last_name}`}
                 postTime={thisPost.time}
               />
-              <Image source={{ uri: thisPost.content_picture }} style={styles.contentPic} />
+              <ImageBackground source={{ uri: thisPost.content_picture }} style={styles.contentPic}>
+                <PlayCircle 
+                  width={60}
+                  height={60} 
+                  stroke={Metrics.whiteColor} 
+                  strokeWidth={1}
+                  fill={'rgba(52, 52, 52, 0.75)'}
+                />
+              </ImageBackground>
               <PostProgress currentProgress={thisPost.current_status} goal={thisPost.goal} />
 
               <View style={styles.buttonTray}>
@@ -182,7 +191,7 @@ export default function ViewPost({ route }) {
 
           <View style={styles.commentComponent}>
             <View style={styles.commentTray}>
-              <Image source={{ uri: poster.profile_pic }} style={styles.userPic}/>
+              <Image source={{ uri: me.profile_pic }} style={styles.userPic}/>
               <View style={styles.commentField}>
                 <TextInput 
                   style={styles.commentInput}
@@ -242,6 +251,8 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   contentPic: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 180,
     resizeMode: 'contain',
     marginTop: 6,
