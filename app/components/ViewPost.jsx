@@ -6,40 +6,49 @@ import {
   Image, 
   Share, 
   TouchableOpacity, 
-  TextInput
+  TextInput, 
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { ThumbsUp, MessageCircle, Upload, Send } from "react-native-feather";
 import * as firebase from "firebase";
 import PostHeader from "./PostHeader";
 import PostProgress from "./PostProgress";
+import Comment from "./Comment";
 import db from "../firebase";
 import Metrics from "../Metrics";
 
-export default function FeedPost({ content, navigation }) {
-  const { 
-    id,
-    campaign_picture, 
-    campaign, 
-    time, 
-    content_picture,
-    current_status,
-    goal,
-    likes,
-    hasLiked,
-    comments,
-    hasCommented,
-  } = content;
-
+export default function ViewPost({ route }) {
+  const [loading, setLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
   const [poster, setPoster] = useState({});
   const [me, setMe] = useState({});
-  const [commentText, setCommentText] = useState("");
-  const [userHasLiked, setUserHasLiked] = useState(hasLiked);
-  const [numLikes, setNumLikes] = useState(likes);
-  const [userHasCommented, setUserHasCommented] = useState(hasCommented);
-  const [numComments, setNumComments] = useState(comments.length);
+  const [thisPost, setThisPost] = useState({});
+  const [comments, setComments] = useState([]);
+  const [userHasLiked, setUserHasLiked] = useState(false);
+  const [numLikes, setNumLikes] = useState(0);
+  const [userHasCommented, setUserHasCommented] = useState(false);
+  const [numComments, setNumComments] = useState(0);
 
-  const loadPosterData = async (userRef) => {
-    const posterFromDatabase = await userRef.get();
+  const { postId, posterId } = route.params;
+
+  const loadPost = async () => {
+    const postFromDatabase = await db.collection("posts").doc(postId).get();
+    const postData = postFromDatabase.data();
+    setThisPost(postData);
+    setComments(postData.comments.reverse());
+    setUserHasLiked(postData.hasLiked);
+    setNumLikes(postData.likes);
+    setUserHasCommented(postData.hasCommented);
+    setNumComments(postData.comments.length);
+  };
+
+  const loadPosterData = async (posterId) => {
+    const posterRef = db.collection("users").doc(posterId);
+    const posterFromDatabase = await posterRef.get();
     const poster = posterFromDatabase.data();
     setPoster(poster);
   };
@@ -51,9 +60,16 @@ export default function FeedPost({ content, navigation }) {
     setMe(meData);
   }
 
+  const loadEverything = async () => {
+    setLoading(true);
+    await loadPost();
+    await loadPosterData(posterId);
+    await loadMeData();
+    setLoading(false);
+  };
+
   useEffect(() => {
-    loadPosterData(content.user);
-    loadMeData();
+    loadEverything();
   }, []);
 
   const toggleLikePost = async () => {
@@ -61,7 +77,7 @@ export default function FeedPost({ content, navigation }) {
     const newNumLikes = (newLikedState) ? numLikes + 1 : numLikes - 1;
     setUserHasLiked(newLikedState);
     setNumLikes(newNumLikes);
-    const docRef = db.collection("posts").doc(id);
+    const docRef = db.collection("posts").doc(postId);
     const result = await docRef.update({ likes: newNumLikes, hasLiked: newLikedState });
   }
 
@@ -83,18 +99,12 @@ export default function FeedPost({ content, navigation }) {
     );
   };
 
-  const onPressComments = () => {
-    navigation.navigate("ViewPost", {postId: id, posterId: content.user.id});
-  };
-
   const CommentButton = () => {
     return (
       <View style={styles.buttonAndNumber}>
-        <TouchableOpacity 
-          style={userHasCommented ? styles.pressedBlueButton : styles.button} 
-          onPress={onPressComments}>
+        <View style={userHasCommented ? styles.pressedBlueButton : styles.button}>
           <MessageCircle stroke={userHasCommented ? Metrics.blueColor : Metrics.darkGrayColor}/>
-        </TouchableOpacity>
+        </View>
         <Text style={{ 
           ...styles.countText, 
           color: userHasCommented ? Metrics.blueColor : Metrics.darkGrayColor 
@@ -106,7 +116,7 @@ export default function FeedPost({ content, navigation }) {
   };
 
   const sharePost = async () => {
-    await Share.share({message: `Sprout Out Loud: Check out this post from ${campaign}\n${Metrics.SITE_URL}`});
+    await Share.share({message: `Sprout Out Loud: Check out this post from ${thisPost.campaign}\n${Metrics.SITE_URL}`});
   };
 
   const ShareButton = () => {
@@ -129,65 +139,95 @@ export default function FeedPost({ content, navigation }) {
       user: db.collection("users").doc("testUser"), 
       time: firebase.firestore.Timestamp.now(),
     }
-    const docRef = db.collection("posts").doc(id);
+    setComments([newComment, ...comments]);
+    const docRef = db.collection("posts").doc(postId);
     const result = await docRef.update({ 
       hasCommented: true, 
       comments: firebase.firestore.FieldValue.arrayUnion(newComment),
     });
   };
 
+  const renderComment = ({ item }) => {
+    const { content, time, user } = item;
+    const posterId = user.id;
+    return (
+      <Comment data={{ content, time, posterId }}/>
+    );
+  }
+
   return (
-    <View style={styles.card}>
-      <PostHeader 
-        campaignPic={campaign_picture}
-        campaignTitle={campaign}
-        posterName={`${poster.first_name} ${poster.last_name}`}
-        postTime={time}
-      />
-      <Image source={{ uri: content_picture }} style={styles.contentPic} />
-      <PostProgress currentProgress={current_status} goal={goal} />
+    <View style={styles.container}>
+      { loading ? (
+        <ActivityIndicator size='large' color={Metrics.greenColor} />
+      ) : (
+        <ScrollView style={styles.card}>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View>
+              <PostHeader 
+                campaignPic={thisPost.campaign_picture}
+                campaignTitle={thisPost.campaign}
+                posterName={`${poster.first_name} ${poster.last_name}`}
+                postTime={thisPost.time}
+              />
+              <Image source={{ uri: thisPost.content_picture }} style={styles.contentPic} />
+              <PostProgress currentProgress={thisPost.current_status} goal={thisPost.goal} />
 
-      <View style={styles.buttonTray}>
-        <LikeButton />
-        <CommentButton />
-        <ShareButton />
-      </View>
+              <View style={styles.buttonTray}>
+                <LikeButton />
+                <CommentButton />
+                <ShareButton />
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
 
-      <View style={styles.commentComponent}>
-        <TouchableOpacity onPress={onPressComments}>
-          <Text style={styles.viewCommentsText}>
-            {viewCommentString}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.commentTray}>
-          <Image source={{ uri: me.profile_pic }} style={styles.userPic}/>
-          <View style={styles.commentField}>
-            <TextInput 
-              style={styles.commentInput}
-              value={commentText}
-              onChangeText={setCommentText}
-              onSubmitEditing={() => submitComment(commentText)}
-              returnKeyType="send"
-              placeholder="Add a comment..."
-            />
+          <View style={styles.commentComponent}>
+            <View style={styles.commentTray}>
+              <Image source={{ uri: poster.profile_pic }} style={styles.userPic}/>
+              <View style={styles.commentField}>
+                <TextInput 
+                  style={styles.commentInput}
+                  value={commentText}
+                  onChangeText={setCommentText}
+                  onSubmitEditing={() => submitComment(commentText)}
+                  returnKeyType="send"
+                  placeholder="Add a comment..."
+                />
+              </View>
+              <TouchableOpacity onPress={() => submitComment(commentText)}>
+                <Send stroke={Metrics.darkGrayColor} style={styles.sendIcon} />
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity onPress={() => submitComment(commentText)}>
-            <Send stroke={Metrics.darkGrayColor} style={styles.sendIcon} />
-          </TouchableOpacity>
-        </View>
-      </View>
+
+          {comments.map((comment, idx) => 
+            <Comment 
+              key={idx}
+              content={comment.content}  
+              time={comment.time}
+              posterId={comment.user.id}
+            />
+          )}
+
+        </ScrollView>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   card: {
     backgroundColor: Metrics.whiteColor,
     height: '100%',
     width: Metrics.screenWidth * 0.97,
-    marginVertical: 6,
+    marginTop: 6,
     marginHorizontal: 6,
-    borderRadius: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     elevation: 3,
     shadowOffset: { width: 1, height: 1 },
     shadowColor: '#333',
@@ -248,13 +288,8 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   commentComponent: {
-    marginTop: 6,
-  },
-  viewCommentsText: {
-    fontFamily: Metrics.fontFamily,
-    fontSize: 14,
-    fontWeight: Metrics.fontWeightMedium,
-    marginBottom: 2,
+    marginTop: 8,
+    marginBottom: 4,
   },
   commentTray: {
     flexDirection: 'row',
