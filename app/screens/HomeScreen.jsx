@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 // import navigation screens
 import Feed from "../components/Feed";
+import ViewPost from "../components/ViewPost";
 // import auxiliary classes
 import Metrics from '../Metrics';
 import Images from '../Images';
@@ -11,9 +12,15 @@ const Stack = createStackNavigator();
 
 export default function HomeScreen({ navigation }) {
 
-  const renderLogo = () => {
+  const renderLogoHeader = () => {
     return (
       <Image style={styles.logoBanner} source={Images.logo} />
+    );
+  };
+
+  const renderViewPostHeader = () => {
+    return (
+      <Text style={styles.headerTitle}>View Post</Text>
     );
   };
 
@@ -23,7 +30,16 @@ export default function HomeScreen({ navigation }) {
         name="HomeFeed"
         component={Feed}
         options={{
-          headerTitle: renderLogo,
+          headerTitle: renderLogoHeader,
+          headerTintColor: Metrics.blackColor,
+        }}
+      />
+      <Stack.Screen 
+        name="ViewPost"
+        component={ViewPost}
+        options={{
+          headerTitle: renderViewPostHeader, 
+          headerBackTitleVisible: false, 
           headerTintColor: Metrics.blackColor,
         }}
       />
@@ -35,5 +51,9 @@ const styles = StyleSheet.create({
   logoBanner: {
     width: Metrics.screenWidth * 0.7,
     resizeMode: 'contain',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: Metrics.fontWeightMedium,
   },
 });

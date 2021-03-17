@@ -1,15 +1,22 @@
 import React, { useState, useEffect} from "react";
-import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
+import { 
+  StyleSheet, 
+  View, 
+  FlatList, 
+  ActivityIndicator, 
+  RefreshControl 
+} from "react-native";
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import FeedPost from "./FeedPost";
 import db from "../firebase";
 import Metrics from '../Metrics';
 
-export default function HomeFeed() {
+export default function HomeFeed({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const parsePostsFromDatabase = (postsFromDatabase) => {
+  const parsePostsFromDatabase = (postsFromDatabase, collectionPath) => {
     const parsedPosts = [];
     postsFromDatabase.forEach((post) => {
       const postData = post.data();
@@ -24,18 +31,24 @@ export default function HomeFeed() {
     setAllPosts([]);
     const collRef = db.collection("posts");
     const postsFromDatabase = await collRef.get();
-    const posts = parsePostsFromDatabase(postsFromDatabase);
+    const posts = parsePostsFromDatabase(postsFromDatabase, "posts");
     setAllPosts(posts);
     setLoading(false);
   };
 
   useEffect(() => {
     loadAllPosts();
-  }, []);
+  }, [refreshing]);
 
   const renderFeedPost = ({ item }) => {
-    return <FeedPost content={item} />;
+    return <FeedPost content={item} navigation={navigation} />;
   };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadAllPosts();
+    setRefreshing(false);
+  }
 
   return (
     <View style={styles.container}>
@@ -44,9 +57,14 @@ export default function HomeFeed() {
       ) : (
         <KeyboardAwareFlatList 
           data={allPosts} 
-          extraScrollHeight={-48}
           renderItem={renderFeedPost} 
           keyExtractor={(item, index) => item.post_id}
+          refreshControl={<RefreshControl 
+            refreshing={refreshing} 
+            onRefresh={onRefresh} 
+            tintColor={Metrics.greenColor} 
+          />}
+          extraScrollHeight={-48}
           directionalLockEnabled={true}
         />
       )}
