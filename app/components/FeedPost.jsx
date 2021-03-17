@@ -6,9 +6,10 @@ import {
   Image, 
   Share, 
   TouchableOpacity, 
-  TextInput
+  TextInput,
+  ImageBackground,
 } from "react-native";
-import { ThumbsUp, MessageCircle, Upload, Send } from "react-native-feather";
+import { ThumbsUp, MessageCircle, Upload, Send, PlayCircle } from "react-native-feather";
 import * as firebase from "firebase";
 import PostHeader from "./PostHeader";
 import PostProgress from "./PostProgress";
@@ -144,7 +145,15 @@ export default function FeedPost({ content, navigation }) {
         posterName={`${poster.first_name} ${poster.last_name}`}
         postTime={time}
       />
-      <Image source={{ uri: content_picture }} style={styles.contentPic} />
+      <ImageBackground source={{ uri: content_picture }} style={styles.contentPic}>
+        <PlayCircle 
+          width={60}
+          height={60} 
+          stroke={Metrics.whiteColor} 
+          strokeWidth={1}
+          fill={'rgba(52, 52, 52, 0.75)'}
+        />
+      </ImageBackground>
       <PostProgress currentProgress={current_status} goal={goal} />
 
       <View style={styles.buttonTray}>
@@ -202,6 +211,8 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   contentPic: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 180,
     resizeMode: 'contain',
     marginTop: 6,
