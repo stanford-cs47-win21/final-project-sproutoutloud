@@ -12,6 +12,7 @@ import {
 import "firebase/firebase-storage";
 import firebase from "firebase";
 import firestore from "../firebase";
+import Metrics from "../Metrics";
 
 const parsePostsFromDatabase = (postsFromDatabase, collectionPath) => {
   const parsedPosts = [];
@@ -26,9 +27,10 @@ const parsePostsFromDatabase = (postsFromDatabase, collectionPath) => {
 export default function ConfirmContribution({ route, navigation }) {
   const { campaign, uri, contributor, campaignOwner } = route.params;
   const [allPosts, setAllPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const storage = firebase.storage();
   const getAllPosts = async () => {
-    const collRef = db.collection("posts");
+    const collRef = firestore.collection("posts");
     const postsFromDatabase = await collRef.get();
     const posts = parsePostsFromDatabase(postsFromDatabase, "posts");
     setAllPosts(posts);
@@ -36,7 +38,7 @@ export default function ConfirmContribution({ route, navigation }) {
 
   useEffect(() => {
     getAllPosts();
-  });
+  }, []);
 
   const splitURI = uri.split("/");
   const filename = splitURI[8];
@@ -104,10 +106,14 @@ export default function ConfirmContribution({ route, navigation }) {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   let onPress = () => {
+    setLoading(true);
     fetch(uri)
       .then((response) => response.blob())
       .then((blob) => {
@@ -129,25 +135,35 @@ export default function ConfirmContribution({ route, navigation }) {
         justifyContent: "center",
       }}
     >
-      <Text style={{ fontWeight: "bold", fontSize: 24 }}>
-        Confirm your submission
-      </Text>
-      <Image source={{ uri: uri }} style={{ width: 400, height: 400 }} />
-      <View style={{ paddingTop: 10 }}>
-        <TouchableOpacity style={styles.button} onPress={onPress}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "bold",
-              color: "white",
-              paddingLeft: 5,
-              textAlign: "center",
-            }}
-          >
-            Upload
+      {loading ? (
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={styles.text}>Uploading post...</Text>
+          <Text style={styles.text}>This may take a few minutes - be patient :)</Text>
+          <ActivityIndicator style={{marginVertical: 12}} size='large' color={Metrics.greenColor} />
+        </View>
+      ) : (
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{ fontWeight: "bold", fontSize: 24, marginBottom: 8, textAlign: 'center' }}>
+            {`Confirm your contribution to:\n${campaignOwner.first_name + "'s " + campaign.name + " Campaign"}`}
           </Text>
-        </TouchableOpacity>
-      </View>
+          <Image source={{ uri: uri }} style={{ width: 400, height: 400 }} />
+          <View style={{ marginTop: 16 }}>
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+              <Text
+                style={{
+                  fontFamily: Metrics.fontFamily,
+                  fontWeight: 'bold',
+                  color: Metrics.whiteColor,
+                  letterSpacing: 0.3,
+                  fontSize: 18,
+                }}
+              >
+                Let's post it!
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -156,10 +172,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#34B7F1",
-    padding: 10,
     borderRadius: 50,
-    width: 190,
-    height: 60,
+    height: 48,
+    width: 240,
     flexDirection: "row",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: Metrics.fontWeightMedium,
+    color: "black",
+    textAlign: "center",
   },
 });

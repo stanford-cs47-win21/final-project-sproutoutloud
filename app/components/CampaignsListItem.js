@@ -11,6 +11,7 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import * as Icon from "react-native-feather";
 import metrics from "../Metrics";
+import PostProgress from "./PostProgress";
 
 export default function CampaignListItem({
   campaign,
@@ -38,7 +39,7 @@ export default function CampaignListItem({
   };
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={campaignPressed}>
       <View style={styles.imageHolder}>
         <Image
           source={{ uri: campaign.picture }}
@@ -47,19 +48,17 @@ export default function CampaignListItem({
       </View>
       <View style={styles.textInfo}>
         <View>
-          <TouchableOpacity onPress={campaignPressed}>
-            <Text
-              style={{
-                fontFamily: metrics.fontFamily,
-                fontSize: 22,
-                fontWeight: "bold",
-              }}
-            >
-              {campaign.name}
-            </Text>
-          </TouchableOpacity>
+          <Text
+            style={{
+              fontFamily: metrics.fontFamily,
+              fontSize: 22,
+              fontWeight: "bold",
+            }}
+          >
+            {campaign.name}
+          </Text>
 
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", paddingTop: 2, }}>
             <Image
               source={{ uri: oneUser.profile_pic }}
               style={{ width: 16, height: 16, borderRadius: 50 }}
@@ -83,47 +82,50 @@ export default function CampaignListItem({
                 color: "#8e8e92",
               }}
             >
-              {"and " + userCount + " others have joined so far"}
+              {"and " + userCount + " others have joined"}
             </Text>
           </View>
-          <View style={{ paddingTop: 10 }}>
+          <View style={{ paddingTop: 8 }}>
             <Progress.Bar
               progress={progress}
               width={null}
-              color={"#25D366"}
-              height={10}
-              borderRadius={6}
+              color={metrics.greenColor}
+              height={12}
+              borderWidth={0}
+              borderRadius={12}
               animated={true}
-              unfilledColor={"#CFEFE4"}
+              unfilledColor={metrics.progressUnfilledColor}
             />
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     width: metrics.screenWidth,
-    height: 104,
+    height: 96,
     backgroundColor: metrics.whiteColor,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "flex-start",
   },
   campaignImage: {
-    width: 70,
-    height: 70,
+    width: 64,
+    height: 64,
     borderRadius: 8,
   },
   imageHolder: {
     justifyContent: "center",
   },
   textInfo: {
+    marginLeft: 12,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "stretch",
-    paddingTop: 8.5,
+    paddingTop: 8,
+    paddingBottom: 6,
     borderBottomWidth: 1,
     borderBottomColor: "#8E8E92",
     width: "75%",

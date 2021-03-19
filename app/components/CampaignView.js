@@ -8,15 +8,20 @@ import {
   ImageBackground,
   Share,
   RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
 } from "react-native";
 import firebase from "firebase";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import * as Progress from "react-native-progress";
 import * as Icon from "react-native-feather";
 import metrics from "../Metrics";
 import ReadMore from "react-native-read-more-text";
 import FeedPosts from "./FeedPost";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -98,6 +103,7 @@ export default function CampaignView({ route, navigation }) {
   const _renderItem = ({ item }) => {
     return <FeedPosts content={item} navigation={navigation} />;
   };
+
   let _keyExtractor = (item, index) => item.post_id;
 
   let onClickBack = () => {
@@ -124,11 +130,11 @@ export default function CampaignView({ route, navigation }) {
   };
   let onPressInvite = async () => {
     let message =
-      "Here is a cool opportunity for you to try. Join " +
+      "Sprout Out Loud: Join " +
       campaignOwner.first_name +
       "'s " +
       campaign.name +
-      " Campaign.";
+      " Campaign!";
     try {
       const result = await Share.share({ message });
     } catch (e) {}
@@ -139,147 +145,144 @@ export default function CampaignView({ route, navigation }) {
   }
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.campaignPicture}>
-          <ImageBackground
-            source={{ uri: campaignHeader }}
-            style={{ width: metrics.screenWidth, height: 176 }}
-          >
-            <TouchableOpacity onPress={onClickBack}>
-              <Icon.ChevronLeft stroke={"#fff"} />
-            </TouchableOpacity>
-          </ImageBackground>
-        </View>
-        <View style={styles.campaignHeader}>
-          <View style={{ alignSelf: "center" }}>
-            <Text style={styles.campaignName}>{campaign.name} Campaign</Text>
-          </View>
-
-          <View style={styles.progress}>
-            <View style={styles.progressBar}>
-              <Progress.Bar
-                progress={progress}
-                width={metrics.screenWidth * 0.6}
-                color={"#25D366"}
-                height={20}
-                borderRadius={25}
-                animated={true}
-                unfilledColor={"#CFEFE4"}
-              />
-              <Text>
-                {campaign.progress} posts contributed of {campaign.goal} goal
-              </Text>
-            </View>
-            <View style={{ justifyContent: "center" }}></View>
-            <TouchableOpacity style={styles.button}  onPress={onPressContribute}>
-              <Text
-                style={{ fontSize: 17, fontWeight: "bold", color: "white" }}
-              >
-                Contribute
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ backgroundColor: metrics.whiteColor }}>
-          <Separator />
+      <ScrollView>
+      <View style={styles.campaignPicture}>
+        <ImageBackground
+          source={{ uri: campaignHeader }}
+          style={{ width: metrics.screenWidth, height: 176 }}
+        >
+          <TouchableOpacity style={{position: 'absolute', top: 20}} onPress={onClickBack}>
+            <Icon.ChevronLeft stroke={"#fff"} width={40} height={40}/>
+          </TouchableOpacity>
+          <Icon.PlayCircle 
+            style={{position: 'absolute', left: (metrics.screenWidth * 0.5) - 30, top: 58}}
+            width={60}
+            height={60} 
+            stroke={metrics.whiteColor} 
+            strokeWidth={1}
+            fill={'rgba(52, 52, 52, 0.75)'}
+          />
+        </ImageBackground>
+      </View>
+      <View style={styles.campaignHeader}>
+        <View style={{ alignSelf: "center" }}>
+          <Text style={styles.campaignName}>{campaign.name} Campaign</Text>
         </View>
 
-        <View style={styles.campaignBlurb}>
-          <View style={styles.campaignOwnerInformation}>
-            <View>
-              <Image
-                source={{ uri: campaignOwner.profile_pic }}
-                style={{ width: 48, height: 48, borderRadius: 50 }}
-              />
-            </View>
-            <View style={{ paddingLeft: 5, justifyContent: "center" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {campaignOwner.first_name + " " + campaignOwner.last_name}
-              </Text>
-              <Text style={{ fontSize: 12, color: "#838392" }}>
-                {campaignOwner.location}
-              </Text>
-            </View>
+        <View style={styles.progress}>
+          <View style={styles.progressBar}>
+            <Progress.Bar
+              progress={progress}
+              width={metrics.screenWidth * 0.63}
+              color={"#25D366"}
+              height={18}
+              borderWidth={0}
+              borderRadius={18}
+              animated={true}
+              unfilledColor={"#CFEFE4"}
+            />
+            <Text>{campaign.progress} posts contributed of {campaign.goal} post goal</Text>
           </View>
-          <View>
-            <ReadMore
-              numberOfLines={3}
-              renderTruncatedFooter={_renderTruncatedFooter}
-              renderRevealedFooter={_renderRevealedFooter}
-              onReady={_handleTextReady}
+          <TouchableOpacity style={styles.button} onPress={onPressContribute}>
+            <Text
+              style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
             >
-              <Text style={{ paddingLeft: 10 }}>{campaign.blurb}</Text>
-            </ReadMore>
-          </View>
-        </View>
-        <View style={{ backgroundColor: metrics.whiteColor }}>
-          <Separator />
-        </View>
-        <View style={styles.invitations}>
-          <View>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {userCount + 7} Members
+              {"Contribute"}
             </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={require("../images/Profiles.png")}
-              style={{ width: 270 }}
-            />
-            <TouchableOpacity style={styles.button} onPress={onPressInvite}>
-              <Text
-                style={{ fontSize: 17, fontWeight: "bold", color: "white" }}
-              >
-                + Invite
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.postFeed}>
-            <KeyboardAwareFlatList
-              data={allPosts}
-              renderItem={_renderItem}
-              keyExtractor={_keyExtractor}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-                  tintColor={metrics.greenColor}
-                />
-              }
-              extraScrollHeight={-48}
-              directionalLockEnabled={true}
-            />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
+      <View style={{ backgroundColor: metrics.whiteColor }}>
+        <Separator />
+      </View>
+
+      <View style={styles.campaignBlurb}>
+        <View style={styles.campaignOwnerInformation}>
+          <View>
+            <Image
+              source={{ uri: campaignOwner.profile_pic }}
+              style={{ width: 48, height: 48, borderRadius: 50 }}
+            />
+          </View>
+          <View style={{ paddingLeft: 5, justifyContent: "center" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {campaignOwner.first_name + " " + campaignOwner.last_name}
+            </Text>
+            <Text style={{ fontSize: 12, color: "#838392" }}>
+              {campaignOwner.location}
+            </Text>
+          </View>
+        </View>
+        <View>
+          <ReadMore
+            numberOfLines={3}
+            renderTruncatedFooter={_renderTruncatedFooter}
+            renderRevealedFooter={_renderRevealedFooter}
+            onReady={_handleTextReady}
+          >
+            <Text style={{ paddingLeft: 10 }}>{campaign.blurb}</Text>
+          </ReadMore>
+        </View>
+      </View>
+
+      <View style={{ backgroundColor: metrics.whiteColor }}>
+        <Separator />
+      </View>
+
+      <View style={styles.invitations}>
+        <View>
+          <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+            {userCount + 7} Members
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+          <Image
+            source={require("../images/Profiles.png")}
+            style={{ width: metrics.screenWidth * 0.7, height: metrics.screenWidth * 0.14, marginLeft: -4, resizeMode: 'contain', }}
+          />
+          <TouchableOpacity style={styles.button} onPress={onPressInvite}>
+            <Text
+              style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
+            >
+              {"+ Invite"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View>
+        {allPosts.map((item, idx) => (
+          <FeedPosts key={idx} content={item} navigation={navigation} />
+        ))}
+      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    // height: metrics.screenHeight,
-    // backgroundColor: "#fff",
-  },
   campaignHeader: {
     alignItems: "flex-start",
     backgroundColor: metrics.whiteColor,
+    paddingBottom: 4,
   },
   campaignName: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 28,
+    marginVertical: 4,
   },
   progress: {
     flexDirection: "row",
+    alignItems: 'flex-start',
+    marginVertical: 4,
+    justifyContent: 'space-between',
   },
   progressBar: {
     alignItems: "flex-start",
     flexDirection: "column",
-    paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
   },
   separator: {
-    marginVertical: 8,
     borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
     color: metrics.whiteColor,
@@ -290,8 +293,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#34B7F1",
     padding: 10,
     borderRadius: 50,
-    width: 110,
-    height: 40,
+    width: 104,
+    height: 36,
   },
   campaignOwnerInformation: {
     flexDirection: "row",
@@ -299,16 +302,13 @@ const styles = StyleSheet.create({
   },
   campaignBlurb: {
     paddingLeft: 10,
+    paddingVertical: 8,
     backgroundColor: metrics.whiteColor,
   },
   invitations: {
-    paddingLeft: 10,
+    paddingLeft: 8,
+    paddingVertical: 4,
     backgroundColor: metrics.whiteColor,
-    height: 70,
-    paddingBottom: 10,
   },
-  postFeed: {
-    paddingTop: 10,
-    height: 350,
-  },
+
 });

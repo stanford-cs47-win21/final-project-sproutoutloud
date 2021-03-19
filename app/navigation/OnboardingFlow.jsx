@@ -20,7 +20,7 @@ export default function OnboardingFlow({ navigation }) {
       activeDotStyle={{ width: 20 }}
       paginationStyle={{ bottom: 48 }}
     >
-      <Page1 />
+      <Page1 navigateToMainApp={navigateToMainApp} />
       <Page2 />
       <Page3 />
       <Page4 />

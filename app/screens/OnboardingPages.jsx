@@ -20,7 +20,7 @@ const LogoBanner = ({ style }) => {
   );
 }
 
-const Page1 = () => {
+const Page1 = ({ navigateToMainApp }) => {
   return(
     <SafeAreaView style={styles.splashContainer}>
       <Image source={Images.logo} style={styles.bigLogo} />
@@ -29,6 +29,9 @@ const Page1 = () => {
           {"Record your impact,\ninspire sustainability"}
         </Text>
       </View>
+      <TouchableOpacity style={styles.tappable} onPress={navigateToMainApp}>
+        <Text style={styles.tapText}>tap here to skip onboarding</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -131,7 +134,7 @@ const Page5 = ({ navigateToMainApp }) => {
         </Text>
       </Text>
       <TouchableOpacity style={styles.tappable} onPress={navigateToMainApp}>
-        <Text style={styles.tapText}>tap to get started!</Text>
+        <Text style={styles.tapText}>tap here to get started!</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -201,7 +204,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   tappable: {
-    marginTop: 72,
+    position: 'absolute',
+    top: Metrics.screenHeight * 0.88,
   },
   tapText: {
     textAlign: 'center',
@@ -210,6 +214,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontSize: 16,
     letterSpacing: -0.24,
-    color: Metrics.charcoalColor,
+    color: Metrics.darkGrayColor
   },
 });

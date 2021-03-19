@@ -14,7 +14,7 @@ import firestore from "../firebase";
 import { useState } from "react";
 import { useEffect } from "react";
 import CampaignsListItem from "./CampaignsListItem";
-import metrics from "../Metrics";
+import Metrics from "../Metrics";
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 export default function Campaigns({
@@ -30,8 +30,6 @@ export default function Campaigns({
     const allPosts = await firestore.collection("campaigns").get();
     return allPosts.docs.map((doc) => doc.data());
   }
-
-  let _keyExtractor = (item, index) => item.post_id;
 
   let onCampaignPressed = (campaign) => {
     onCampaignRequested(campaign);
@@ -71,22 +69,24 @@ export default function Campaigns({
 
   return (
     <View style={styles.container}>
-      <View style={styles.topText}>
-        <Text style={styles.joinedCampaigns}>Joined Campaigns</Text>
-      </View>
-      {loading ? (<ActivityIndicator size="large" color={metrics.greenColor} />):(
-        <KeyboardAwareFlatList 
-        data={allCampaigns} 
-        renderItem={renderItem} 
-        keyExtractor={_keyExtractor}
-        refreshControl={<RefreshControl 
-          refreshing={refreshing} 
-          onRefresh={onRefresh} 
-          tintColor={metrics.greenColor} 
-        />}
-        extraScrollHeight={-48}
-        directionalLockEnabled={true}
-      />
+      { loading ? (
+        <ActivityIndicator size='large' color={Metrics.greenColor} />
+      ) : (
+        <View style={styles.listView}>
+          <Text style={styles.joinedCampaigns}>Joined Campaigns</Text>
+          <KeyboardAwareFlatList 
+            data={allCampaigns} 
+            renderItem={renderItem} 
+            keyExtractor={(item, index) => index.toString()}
+            refreshControl={<RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={onRefresh} 
+              tintColor={Metrics.greenColor} 
+            />}
+            extraScrollHeight={-48}
+            directionalLockEnabled={true}
+          />
+        </View>
       )}
     </View>
   );
@@ -95,19 +95,17 @@ export default function Campaigns({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: Metrics.whiteColor,
   },
-  topText: {
-    paddingLeft: 8,
+  listView: {
+    marginLeft: 8,
   },
   joinedCampaigns: {
+    marginTop: 12,
     fontSize: 28,
-    alignSelf: "flex-start",
-    justifyContent: "flex-start",
-    color: "#000000",
     fontWeight: "bold",
-    fontFamily: metrics.fontFamily,
+    fontFamily: Metrics.fontFamily,
   },
 });
