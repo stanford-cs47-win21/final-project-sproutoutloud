@@ -58,7 +58,7 @@ export default function HomeFeed({ navigation }) {
         <KeyboardAwareFlatList 
           data={allPosts} 
           renderItem={renderFeedPost} 
-          keyExtractor={(item, index) => item.post_id}
+          keyExtractor={(item, index) => index.toString()}
           refreshControl={<RefreshControl 
             refreshing={refreshing} 
             onRefresh={onRefresh} 

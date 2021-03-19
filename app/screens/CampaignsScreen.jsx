@@ -25,6 +25,18 @@ export default function CampaignsList({ navigation }) {
     );
   };
 
+  const renderContributeHeader = () => {
+    return (
+      <Text style={styles.headerTitle}>Make a Contribution</Text>
+    );
+  };
+
+  const renderConfirmHeader = () => {
+    return (
+      <Text style={styles.headerTitle}>Post Preview</Text>
+    );
+  };
+
   return (
     <Stack.Navigator initialRouteName="CampaignsScreen" headerMode="float">
       <Stack.Screen
@@ -41,10 +53,22 @@ export default function CampaignsList({ navigation }) {
       <Stack.Screen name={"CampaignView"} options={{ headerShown: false }}>
         {(props) => <CampaignView {...props} />}
       </Stack.Screen>
-      <Stack.Screen name={"Contribute"} options={{ headerTitle: "Make your contribution" }}>
+      <Stack.Screen name={"Contribute"} 
+        options={{ 
+          headerTitle: renderContributeHeader, 
+          headerBackTitleVisible: false, 
+          headerTintColor: Metrics.blackColor,
+        }}
+      >
         {(props) => <Contribute {...props} />}
       </Stack.Screen>
-      <Stack.Screen name={"ConfirmContribution"} options={{ headerTitle: "Confirm your contribution" }}>
+      <Stack.Screen name={"ConfirmContribution"} 
+        options={{ 
+          headerTitle: renderConfirmHeader, 
+          headerBackTitleVisible: false, 
+          headerTintColor: Metrics.blackColor,
+        }}
+      >
         {(props) => <ConfirmContribution {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
@@ -61,5 +85,9 @@ const styles = StyleSheet.create({
   logoBanner: {
     width: Metrics.screenWidth * 0.7,
     resizeMode: 'contain',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: Metrics.fontWeightMedium,
   },
 });

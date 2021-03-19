@@ -66,11 +66,10 @@ export default function Contribute({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignSelf: "center", justifyContent: "flex-start" }}>
+      <View style={{ alignSelf: "center", justifyContent: "flex-start", marginVertical: 96 }}>
         <StatusBar barStyle="default" />
-        <Text style={{ fontWeight: "bold", fontSize: 24 }}>
-          Upload an image of your action towards{" "}
-          {campaignOwner.first_name + "'s " + campaign.name + " Campaign"}
+        <Text style={{ fontWeight: "bold", fontSize: 24, textAlign: 'center' }}>
+          {`Upload an image of your sustainable action towards:\n\n${campaignOwner.first_name + "'s " + campaign.name + " Campaign"}`}
         </Text>
       </View>
       <View>
@@ -80,14 +79,14 @@ export default function Contribute({ route, navigation }) {
           </View>
           <Text
             style={{
-              fontSize: 17,
+              fontSize: 18,
               fontWeight: "bold",
               color: "white",
               paddingLeft: 5,
               textAlign: "center",
             }}
           >
-            Upload From Camera
+            {" Take a photo!"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -98,14 +97,13 @@ export default function Contribute({ route, navigation }) {
           </View>
           <Text
             style={{
-              fontSize: 17,
+              fontSize: 18,
               fontWeight: "bold",
               color: "white",
-              paddingLeft: 5,
               textAlign: "center",
             }}
           >
-            Upload From Image Library
+            {" Upload From Gallery"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -118,17 +116,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
-    justifyContent: "space-around",
+    justifyContent: "flex-start",
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#34B7F1",
-    padding: 10,
-    borderRadius: 50,
-    width: 190,
-    height: 60,
+    marginVertical: 12,
+    borderRadius: 24,
+    width: 240,
+    height: 48,
     flexDirection: "row",
   },
 });

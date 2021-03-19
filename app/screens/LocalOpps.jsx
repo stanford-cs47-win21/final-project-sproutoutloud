@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 // import navigation screens
 import MapTab from "../components/MapTab";
@@ -54,9 +54,9 @@ const Stack = createStackNavigator();
 
 export default function LocalOpps() {
   
-  const renderMapHeader = () => {
+  const renderLogoHeader = () => {
     return (
-      <Text style={styles.headerTitle}>Nearby Activities</Text>
+      <Image style={styles.logoBanner} source={Images.logo} />
     );
   };
 
@@ -68,7 +68,7 @@ export default function LocalOpps() {
 
   return (
     <Stack.Navigator initialRouteName="MapTab">
-      <Stack.Screen name="MapTab" options={{ headerTitle: renderMapHeader }}>
+      <Stack.Screen name="MapTab" options={{ headerTitle: renderLogoHeader }}>
         {(props) => <MapTab {...props} events={EVENT_LIST}/>}
       </Stack.Screen>
       <Stack.Screen 
@@ -94,5 +94,9 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: Metrics.fontWeightMedium,
+  },
+  logoBanner: {
+    width: Metrics.screenWidth * 0.7,
+    resizeMode: 'contain',
   },
 });
