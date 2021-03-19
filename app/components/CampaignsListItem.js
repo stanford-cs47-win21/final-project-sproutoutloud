@@ -18,7 +18,7 @@ export default function CampaignListItem({
   navigation,
 }) {
   const [oneUser, setOneUser] = useState({});
-  const userCount = campaign.users.length - 1;
+  const userCount = campaign.users.length + 6;
   const progress = campaign.progress / campaign.goal;
 
   useEffect(() => {

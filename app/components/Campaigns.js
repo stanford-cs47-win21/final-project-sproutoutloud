@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Image,
   TouchableOpacity,
+  RefreshControl
 } from "react-native";
 import firebase from "firebase";
 import firestore from "../firebase";
@@ -14,6 +15,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import CampaignsListItem from "./CampaignsListItem";
 import metrics from "../Metrics";
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 
 export default function Campaigns({
   contents,
@@ -22,6 +24,7 @@ export default function Campaigns({
 }) {
   const [loading, setLoading] = useState(false);
   const [allCampaigns, setAllCampaigns] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   async function getCampaigns() {
     const allPosts = await firestore.collection("campaigns").get();
@@ -49,7 +52,7 @@ export default function Campaigns({
     } else {
       getAllCampaigns();
     }
-  }, [contents]);
+  }, [refreshing]);
 
   let getAllCampaigns = () => {
     setLoading(true);
@@ -60,38 +63,31 @@ export default function Campaigns({
     });
   };
 
-  function displayedContents() {
-    let content = null;
-    if (loading) {
-      content = <ActivityIndicator size="large" color="#0000ff" />;
-    } else {
-      content = (
-        <FlatList
-          data={allCampaigns}
-          renderItem={renderItem}
-          keyExtractor={_keyExtractor}
-        />
-      );
-    }
-    return content;
-  }
+  const onRefresh = () => {
+    setRefreshing(true);
+    getAllCampaigns();
+    setRefreshing(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topText}>
-        <Text
-          style={{
-            fontSize: 28,
-            alignSelf: "flex-start",
-            justifyContent: "flex-start",
-            color: "#000000",
-            fontWeight: "bold",
-            fontFamily: metrics.fontFamily,
-          }}
-        >
-          Joined Campaigns
-        </Text>
+        <Text style={styles.joinedCampaigns}>Joined Campaigns</Text>
       </View>
-      {displayedContents()}
+      {loading ? (<ActivityIndicator size="large" color={metrics.greenColor} />):(
+        <KeyboardAwareFlatList 
+        data={allCampaigns} 
+        renderItem={renderItem} 
+        keyExtractor={_keyExtractor}
+        refreshControl={<RefreshControl 
+          refreshing={refreshing} 
+          onRefresh={onRefresh} 
+          tintColor={metrics.greenColor} 
+        />}
+        extraScrollHeight={-48}
+        directionalLockEnabled={true}
+      />
+      )}
     </View>
   );
 }
@@ -105,5 +101,13 @@ const styles = StyleSheet.create({
   },
   topText: {
     paddingLeft: 8,
+  },
+  joinedCampaigns: {
+    fontSize: 28,
+    alignSelf: "flex-start",
+    justifyContent: "flex-start",
+    color: "#000000",
+    fontWeight: "bold",
+    fontFamily: metrics.fontFamily,
   },
 });

@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import Campaigns from "../components/Campaigns";
 import { createStackNavigator } from "@react-navigation/stack";
 import CampaignView from "../components/CampaignView";
+import Contribute from "../components/Contribute";
+import ConfirmContribution from "../components/ConfirmContribution";
+
 // import auxiliary classes
 import Metrics from '../Metrics';
 import Images from '../Images';
@@ -37,6 +40,12 @@ export default function CampaignsList({ navigation }) {
       </Stack.Screen>
       <Stack.Screen name={"CampaignView"} options={{ headerShown: false }}>
         {(props) => <CampaignView {...props} />}
+      </Stack.Screen>
+      <Stack.Screen name={"Contribute"} options={{ headerTitle: "Make your contribution" }}>
+        {(props) => <Contribute {...props} />}
+      </Stack.Screen>
+      <Stack.Screen name={"ConfirmContribution"} options={{ headerTitle: "Confirm your contribution" }}>
+        {(props) => <ConfirmContribution {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

@@ -140,6 +140,7 @@ export default function ViewPost({ route }) {
       user: db.collection("users").doc("testUser"), 
       time: firebase.firestore.Timestamp.now(),
     }
+    
     setComments([newComment, ...comments]);
     const docRef = db.collection("posts").doc(postId);
     const result = await docRef.update({ 

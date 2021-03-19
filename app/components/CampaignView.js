@@ -6,19 +6,17 @@ import {
   Image,
   SafeAreaView,
   ImageBackground,
-  FlatList,
   Share,
+  RefreshControl,
 } from "react-native";
 import firebase from "firebase";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import Cards from "./Cards";
 import * as Progress from "react-native-progress";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
 import * as Icon from "react-native-feather";
 import metrics from "../Metrics";
 import ReadMore from "react-native-read-more-text";
 import FeedPosts from "./FeedPost";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -28,66 +26,77 @@ export default function CampaignView({ route, navigation }) {
   const [campaignOwner, setCampaignOwner] = useState({});
   const [allMembers, setallMembers] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const userCount = campaign.users.length;
   var fireStore = firebase.storage();
   var progress = campaign.progress / campaign.goal;
 
-  useEffect(() => {
-    const getAllPosts = async (posts) => {
-      var tempAllPost = [];
-      for (const post of posts) {
-        const tempPost = await post.get();
-        if (!tempPost.exists) {
-          console.log("No Post Found");
-        } else {
-          tempAllPost.push(tempPost.data());
-        }
+  const getAllPosts = async (posts) => {
+    var tempAllPost = [];
+    for (const post of posts) {
+      const tempPost = await post.get();
+      if (!tempPost.exists) {
+        console.log("No Post Found");
+      } else {
+        tempAllPost.push(tempPost.data());
       }
-      setAllPosts(tempAllPost);
-    };
-    const getAllUsers = async (users) => {
-      var tempAllUser = [];
-      for (const user of users) {
-        const tempUser = await user.get();
-        if (!tempUser.exists) {
-          console.log("No User Found");
-        } else {
-          tempAllUser.push(tempUser.data());
-        }
-      }
-      setallMembers(tempAllUser);
-    };
-    const getCampaignHeader = (assets_locator) => {
-      const url =
-        "gs://logical-handler-247416.appspot.com/campaignAssets/" +
-        assets_locator +
-        "/header_image.jpg";
-      fireStore
-        .refFromURL(url)
-        .getDownloadURL()
-        .then((imageUrl) => {
-          setCampaignHeader(imageUrl);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    const getOwnerData = async (campaignOwner) => {
-      const uniqueUser = await campaignOwner.get();
-      if (!uniqueUser.exists) {
+    }
+    setAllPosts(tempAllPost);
+  };
+
+  const getAllUsers = async (users) => {
+    var tempAllUser = [];
+    for (const user of users) {
+      const tempUser = await user.get();
+      if (!tempUser.exists) {
         console.log("No User Found");
       } else {
-        setCampaignOwner(uniqueUser.data());
+        tempAllUser.push(tempUser.data());
       }
-    };
+    }
+    setallMembers(tempAllUser);
+  };
+
+  const getCampaignHeader = (assets_locator) => {
+    const url =
+      "gs://logical-handler-247416.appspot.com/campaignAssets/" +
+      assets_locator +
+      "/header_image.png";
+    fireStore
+      .refFromURL(url)
+      .getDownloadURL()
+      .then((imageUrl) => {
+        setCampaignHeader(imageUrl);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getOwnerData = async (campaignOwner) => {
+    const uniqueUser = await campaignOwner.get();
+    if (!uniqueUser.exists) {
+      console.log("No User Found");
+    } else {
+      setCampaignOwner(uniqueUser.data());
+    }
+  };
+
+  useEffect(() => {
     getAllPosts(campaign.posts);
     getAllUsers(campaign.users);
     getOwnerData(campaign.owner);
     getCampaignHeader(campaign.assets_locator);
-  }, []);
+  }, [refreshing]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getAllPosts(campaign.posts);
+    setRefreshing(false);
+  };
 
   const _renderItem = ({ item }) => {
-    return <FeedPosts content={item} />;
+    return <FeedPosts content={item} navigation={navigation} />;
   };
   let _keyExtractor = (item, index) => item.post_id;
 
@@ -124,6 +133,10 @@ export default function CampaignView({ route, navigation }) {
       const result = await Share.share({ message });
     } catch (e) {}
   };
+
+  let onPressContribute = () => {
+    navigation.navigate("Contribute",{campaign:campaign,campaignOwner:campaignOwner})
+  }
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -158,7 +171,7 @@ export default function CampaignView({ route, navigation }) {
               </Text>
             </View>
             <View style={{ justifyContent: "center" }}></View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button}  onPress={onPressContribute}>
               <Text
                 style={{ fontSize: 17, fontWeight: "bold", color: "white" }}
               >
@@ -222,10 +235,19 @@ export default function CampaignView({ route, navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.postFeed}>
-            <FlatList
+            <KeyboardAwareFlatList
               data={allPosts}
               renderItem={_renderItem}
               keyExtractor={_keyExtractor}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={metrics.greenColor}
+                />
+              }
+              extraScrollHeight={-48}
+              directionalLockEnabled={true}
             />
           </View>
         </View>

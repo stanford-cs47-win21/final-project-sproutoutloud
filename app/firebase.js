@@ -21,4 +21,5 @@ if (!firebase.apps.length) {
 
 var firestore = firebase.firestore();
 
-export default firestore;
+
+export default firestore
