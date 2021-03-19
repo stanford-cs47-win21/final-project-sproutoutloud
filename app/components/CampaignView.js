@@ -145,116 +145,122 @@ export default function CampaignView({ route, navigation }) {
   }
   return (
     <SafeAreaView>
-      <ScrollView>
-      <View style={styles.campaignPicture}>
-        <ImageBackground
-          source={{ uri: campaignHeader }}
-          style={{ width: metrics.screenWidth, height: 176 }}
-        >
-          <TouchableOpacity style={{position: 'absolute', top: 20}} onPress={onClickBack}>
-            <Icon.ChevronLeft stroke={"#fff"} width={40} height={40}/>
-          </TouchableOpacity>
-          <Icon.PlayCircle 
-            style={{position: 'absolute', left: (metrics.screenWidth * 0.5) - 30, top: 58}}
-            width={60}
-            height={60} 
-            stroke={metrics.whiteColor} 
-            strokeWidth={1}
-            fill={'rgba(52, 52, 52, 0.75)'}
-          />
-        </ImageBackground>
-      </View>
-      <View style={styles.campaignHeader}>
-        <View style={{ alignSelf: "center" }}>
-          <Text style={styles.campaignName}>{campaign.name} Campaign</Text>
-        </View>
-
-        <View style={styles.progress}>
-          <View style={styles.progressBar}>
-            <Progress.Bar
-              progress={progress}
-              width={metrics.screenWidth * 0.63}
-              color={"#25D366"}
-              height={18}
-              borderWidth={0}
-              borderRadius={18}
-              animated={true}
-              unfilledColor={"#CFEFE4"}
-            />
-            <Text>{campaign.progress} posts contributed of {campaign.goal} post goal</Text>
-          </View>
-          <TouchableOpacity style={styles.button} onPress={onPressContribute}>
-            <Text
-              style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
-            >
-              {"Contribute"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={{ backgroundColor: metrics.whiteColor }}>
-        <Separator />
-      </View>
-
-      <View style={styles.campaignBlurb}>
-        <View style={styles.campaignOwnerInformation}>
-          <View>
-            <Image
-              source={{ uri: campaignOwner.profile_pic }}
-              style={{ width: 48, height: 48, borderRadius: 50 }}
-            />
-          </View>
-          <View style={{ paddingLeft: 5, justifyContent: "center" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {campaignOwner.first_name + " " + campaignOwner.last_name}
-            </Text>
-            <Text style={{ fontSize: 12, color: "#838392" }}>
-              {campaignOwner.location}
-            </Text>
-          </View>
-        </View>
-        <View>
-          <ReadMore
-            numberOfLines={3}
-            renderTruncatedFooter={_renderTruncatedFooter}
-            renderRevealedFooter={_renderRevealedFooter}
-            onReady={_handleTextReady}
+      <ScrollView
+        refreshControl={<RefreshControl 
+          refreshing={refreshing} 
+          onRefresh={onRefresh} 
+          tintColor={metrics.greenColor} 
+        />}
+      >
+        <View style={styles.campaignPicture}>
+          <ImageBackground
+            source={{ uri: campaignHeader }}
+            style={{ width: metrics.screenWidth, height: 176 }}
           >
-            <Text style={{ paddingLeft: 10 }}>{campaign.blurb}</Text>
-          </ReadMore>
+            <TouchableOpacity style={{position: 'absolute', top: 20}} onPress={onClickBack}>
+              <Icon.ChevronLeft stroke={"#fff"} width={40} height={40}/>
+            </TouchableOpacity>
+            <Icon.PlayCircle 
+              style={{position: 'absolute', left: (metrics.screenWidth * 0.5) - 30, top: 58}}
+              width={60}
+              height={60} 
+              stroke={metrics.whiteColor} 
+              strokeWidth={1}
+              fill={'rgba(52, 52, 52, 0.75)'}
+            />
+          </ImageBackground>
         </View>
-      </View>
+        <View style={styles.campaignHeader}>
+          <View style={{ alignSelf: "center" }}>
+            <Text style={styles.campaignName}>{campaign.name} Campaign</Text>
+          </View>
 
-      <View style={{ backgroundColor: metrics.whiteColor }}>
-        <Separator />
-      </View>
-
-      <View style={styles.invitations}>
-        <View>
-          <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-            {userCount + 7} Members
-          </Text>
+          <View style={styles.progress}>
+            <View style={styles.progressBar}>
+              <Progress.Bar
+                progress={progress}
+                width={metrics.screenWidth * 0.63}
+                color={"#25D366"}
+                height={18}
+                borderWidth={0}
+                borderRadius={18}
+                animated={true}
+                unfilledColor={"#CFEFE4"}
+              />
+              <Text>{campaign.progress} posts contributed of {campaign.goal} post goal</Text>
+            </View>
+            <TouchableOpacity style={styles.button} onPress={onPressContribute}>
+              <Text
+                style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
+              >
+                {"Contribute"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{ flexDirection: "row", alignItems: 'center' }}>
-          <Image
-            source={require("../images/Profiles.png")}
-            style={{ width: metrics.screenWidth * 0.7, height: metrics.screenWidth * 0.14, marginLeft: -4, resizeMode: 'contain', }}
-          />
-          <TouchableOpacity style={styles.button} onPress={onPressInvite}>
-            <Text
-              style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
+        <View style={{ backgroundColor: metrics.whiteColor }}>
+          <Separator />
+        </View>
+
+        <View style={styles.campaignBlurb}>
+          <View style={styles.campaignOwnerInformation}>
+            <View>
+              <Image
+                source={{ uri: campaignOwner.profile_pic }}
+                style={{ width: 48, height: 48, borderRadius: 50 }}
+              />
+            </View>
+            <View style={{ paddingLeft: 5, justifyContent: "center" }}>
+              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+                {campaignOwner.first_name + " " + campaignOwner.last_name}
+              </Text>
+              <Text style={{ fontSize: 12, color: "#838392" }}>
+                {campaignOwner.location}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <ReadMore
+              numberOfLines={3}
+              renderTruncatedFooter={_renderTruncatedFooter}
+              renderRevealedFooter={_renderRevealedFooter}
+              onReady={_handleTextReady}
             >
-              {"+ Invite"}
-            </Text>
-          </TouchableOpacity>
+              <Text style={{ paddingLeft: 10 }}>{campaign.blurb}</Text>
+            </ReadMore>
+          </View>
         </View>
-      </View>
 
-      <View>
-        {allPosts.map((item, idx) => (
-          <FeedPosts key={idx} content={item} navigation={navigation} />
-        ))}
-      </View>
+        <View style={{ backgroundColor: metrics.whiteColor }}>
+          <Separator />
+        </View>
+
+        <View style={styles.invitations}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {userCount + 7} Members
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: 'center' }}>
+            <Image
+              source={require("../images/Profiles.png")}
+              style={{ width: metrics.screenWidth * 0.7, height: metrics.screenWidth * 0.14, marginLeft: -4, resizeMode: 'contain', }}
+            />
+            <TouchableOpacity style={styles.button} onPress={onPressInvite}>
+              <Text
+                style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
+              >
+                {"+ Invite"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View>
+          {allPosts.map((item, idx) => (
+            <FeedPosts key={idx} content={item} navigation={navigation} />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
